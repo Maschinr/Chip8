@@ -5,12 +5,12 @@
 #include <iterator>
 #include <iostream>
 #include <memory.h>
-#include <bitset>
 
 using namespace std;
+using namespace sf;
 
 //TODO maybe sfml and then display register and so on with imgui or try imgui in sdl
-Chip8::Chip8(SDL_Renderer* renderer) : renderer(renderer) {
+Chip8::Chip8(RenderWindow* window) : window(window) {
     this->loadFunctions();
     this->reset();
 }
@@ -27,20 +27,22 @@ void Chip8::reset() {
     this->drawFlag = false;
     this->dtimer = 0;
     this->stimer = 0;
-    //TODO memset keys and allKeys to false
+
+    //Clear memory
     memset(this->memory, 0, 4096);
     memset(this->pixels, 0, 64 * 32);
+    memset(this->keys, 0, sizeof(bool) * 16);
+
     //Load fontset
-    //TODO memcpy
-    for(size_t i = 0; i < 80; i++) {
-        this->memory[i] = this->fontset[i];
-    }
+    memcpy(&this->memory[0], &this->fontset[0], 80);
+
 }
 
 bool Chip8::loadFile(string path) {
     ifstream rom(path, ios::binary);
 
     if(rom.is_open()) {
+        this->reset();
         //TODO change -> Second parameter of istreambuf_iterator describes that no traits should be used
         vector<unsigned char> buffer(istreambuf_iterator<char>(rom), {});
 
@@ -49,11 +51,7 @@ bool Chip8::loadFile(string path) {
             this->memory[i + 512] = buffer[i];
         }
 
-       /* for(size_t i = 0x200; i < 4096; i += 2) {
-            cout << hex << uppercase << (this->memory[i] << 8 | this->memory[i + 1]) << " | ";
-        }
-        cout << dec << nouppercase << endl;*/
-
+        
         return true;
     } else {
         return false;
@@ -61,6 +59,9 @@ bool Chip8::loadFile(string path) {
 }
 
 bool Chip8::cycle() {
+
+    this->input();
+
     //Fetch opcode, current position + cur position + 1 because opcode is 16 bits
     this->opcode = this->memory[this->pc] << 8 | this->memory[this->pc + 1];
 
@@ -82,18 +83,20 @@ bool Chip8::cycle() {
         this->opFunctions[(this->opcode & 0xF000)]();
     }
 
-    //TODO correct 60hz clock decrement 
-    if( this->dtimer > 0)
-        --this->dtimer;
-    
-    if(this->stimer > 0)
-    {
-        if(stimer == 1) {
-            cout << "TODO SOUND" << endl;
+    if(timerClock.getElapsedTime() > milliseconds(seconds(1).asMilliseconds() / 60)) {
+        timerClock.restart();
+        if( this->dtimer > 0) {
+            --this->dtimer;
         }
+            
+        if(this->stimer > 0) {
+            if(stimer == 1) {
+                cout << "TODO SOUND" << endl;
+            }
 
-        --this->stimer;
-    }  
+            --this->stimer;
+        }  
+    }
 
     if(this->drawFlag) {
         this->draw();
@@ -103,30 +106,105 @@ bool Chip8::cycle() {
     return true;
 }
 
-void Chip8::event(SDL_Event& event) {
+void Chip8::input() {
     //Check key presses
-    if(event.type == SDL_KEYDOWN) {
-        this->allKeys[event.key.keysym.sym] = true;
-    } else if(event.type == SDL_KEYUP) {
-        this->allKeys[event.key.keysym.sym] = false;
+    //TODO maybe map or somewhat like that?
+
+    if (Keyboard::isKeyPressed(Keyboard::X)) {
+        this->keys[0] = true;
+    } else {
+        this->keys[0] = false;
     }
 
-    this->keys[1] = this->allKeys[SDLK_1];
-    this->keys[2] = this->allKeys[SDLK_2];
-    this->keys[3] = this->allKeys[SDLK_3];
-    this->keys[12] = this->allKeys[SDLK_4];
-    this->keys[4] = this->allKeys[SDLK_q];
-    this->keys[5] = this->allKeys[SDLK_w];
-    this->keys[6] = this->allKeys[SDLK_e];
-    this->keys[13] = this->allKeys[SDLK_r];
-    this->keys[7] = this->allKeys[SDLK_a];
-    this->keys[8] = this->allKeys[SDLK_s];
-    this->keys[9] = this->allKeys[SDLK_d];
-    this->keys[14] = this->allKeys[SDLK_f];
-    this->keys[10] = this->allKeys[SDLK_y];
-    this->keys[0] = this->allKeys[SDLK_x];
-    this->keys[11] = this->allKeys[SDLK_c];
-    this->keys[15] = this->allKeys[SDLK_v];
+    if (Keyboard::isKeyPressed(Keyboard::Num1)) {
+        this->keys[1] = true;
+    } else {
+        this->keys[1] = false;
+    }
+    
+    if (Keyboard::isKeyPressed(Keyboard::Num2)) {
+        this->keys[2] = true;
+    } else {
+        this->keys[2] = false;
+    }
+
+    if (Keyboard::isKeyPressed(Keyboard::Num3)) {
+        this->keys[3] = true;
+    } else {
+        this->keys[3] = false;
+    }
+
+    if (Keyboard::isKeyPressed(Keyboard::Q)) {
+        this->keys[4] = true;
+    } else {
+        this->keys[4] = false;
+    }
+
+    if (Keyboard::isKeyPressed(Keyboard::W)) {
+        this->keys[5] = true;
+    } else {
+        this->keys[5] = false;
+    }
+
+    if (Keyboard::isKeyPressed(Keyboard::E)) {
+        this->keys[6] = true;
+    } else {
+        this->keys[6] = false;
+    }
+
+    if (Keyboard::isKeyPressed(Keyboard::A)) {
+        this->keys[7] = true;
+    } else {
+        this->keys[7] = false;
+    }
+
+    if (Keyboard::isKeyPressed(Keyboard::S)) {
+        this->keys[8] = true;
+    } else {
+        this->keys[8] = false;
+    }
+
+    if (Keyboard::isKeyPressed(Keyboard::D)) {
+        this->keys[9] = true;
+    } else {
+        this->keys[9] = false;
+    }
+
+    if (Keyboard::isKeyPressed(Keyboard::Y)) {
+        this->keys[10] = true;
+    } else {
+        this->keys[10] = false;
+    }
+
+    if (Keyboard::isKeyPressed(Keyboard::C)) {
+        this->keys[11] = true;
+    } else {
+        this->keys[11] = false;
+    }
+
+    if (Keyboard::isKeyPressed(Keyboard::Num4)) {
+        this->keys[12] = true;
+    } else {
+        this->keys[12] = false;
+    }
+
+    if (Keyboard::isKeyPressed(Keyboard::R)) {
+        this->keys[13] = true;
+    } else {
+        this->keys[13] = false;
+    }
+
+    if (Keyboard::isKeyPressed(Keyboard::F)) {
+        this->keys[14] = true;
+    } else {
+        this->keys[14] = false;
+    }
+
+    if (Keyboard::isKeyPressed(Keyboard::V)) {
+        this->keys[15] = true;
+    } else {
+        this->keys[15] = false;
+    }
 }
 
 void Chip8::loadFunctions() {
@@ -281,7 +359,7 @@ void Chip8::loadFunctions() {
         //cout << "0x8XYE Stores the most significant bit of VX in VF and then shifts VX to the left by 1." << endl;
         
         this->V[0xF] = ((this->V[((this->opcode & 0x0F00) >> 8)] & 0x80)) >> 7;
-        this->V[((this->opcode & 0x0F00) >> 8)] = this->V[((this->opcode & 0x0F00) >> 8)] << 1;
+        this->V[((this->opcode & 0x0F00) >> 8)] <<= 1;
         this->pc += 2;  
     };
 
@@ -370,15 +448,6 @@ void Chip8::loadFunctions() {
         this->pc += 2;
     };
 
-    this->opFunctions[0xF055] = [this] () {         // 0xFX55 Stores V0 to VX (including VX) in memory starting at address I. The offset from I is increased by 1 for each value written, but I itself is left unmodified.
-        //cout << "0xFX55 Stores V0 to VX (including VX) in memory starting at address I. The offset from I is increased by 1 for each value written, but I itself is left unmodified." << endl;
-        unsigned short x = ((this->opcode & 0x0F00) >> 8); //Last Register to fill
-        for(int i = 0; i <= x; i++) {
-            this->memory[this->I + i] = this->V[i];
-        }
-        this->pc += 2;
-    };
-
     this->opFunctions[0xF033] = [this] () {         // 0xFX33 BCD Transform.
         //cout << "0xFX33 BCD Transform." << endl;
         //Solution from http://www.multigesture.net/wp-content/uploads/mirror/goldroad/chip8.shtml
@@ -386,6 +455,15 @@ void Chip8::loadFunctions() {
         this->memory[I] = this->V[(this->opcode & 0x0F00) >> 8] / 100;
         this->memory[I + 1] = (this->V[(this->opcode & 0x0F00) >> 8] / 10) % 10;
         this->memory[I + 2] = (this->V[(this->opcode & 0x0F00) >> 8] % 100) % 10;
+        this->pc += 2;
+    };
+
+    this->opFunctions[0xF055] = [this] () {         // 0xFX55 Stores V0 to VX (including VX) in memory starting at address I. The offset from I is increased by 1 for each value written, but I itself is left unmodified.
+        //cout << "0xFX55 Stores V0 to VX (including VX) in memory starting at address I. The offset from I is increased by 1 for each value written, but I itself is left unmodified." << endl;
+        unsigned short x = ((this->opcode & 0x0F00) >> 8); //Last Register to fill
+        for(int i = 0; i <= x; i++) {
+            this->memory[this->I + i] = this->V[i];
+        }
         this->pc += 2;
     };
 
@@ -400,24 +478,47 @@ void Chip8::loadFunctions() {
 }
 
 void Chip8::draw() {
-    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
-    SDL_RenderClear(renderer);
-
-    SDL_SetRenderDrawColor(this->renderer, 255, 255, 255, 255);
-    SDL_Rect r;
+    this->window->clear(Color::Blue);
    
+    unsigned int w_width = this->window->getSize().x;
+    w_width = ((int)(w_width / 64)) * 64;
+    unsigned int w_height = this->window->getSize().y;
+    w_height = ((int)(w_height / 32)) * 32;
+    unsigned int width, height;
+
+    if(w_width / 2 > w_height) { // The playground can't be stretched all the way because height is not enough
+        height = w_height;
+        width = height * 2;
+    } else {
+        width = w_width;
+        height = width / 2;
+    }
+
+    RectangleShape rect(Vector2f(width, height));
+
+    //Configure playarea
+    rect.setOrigin(Vector2f(width / 2, height / 2));
+    rect.setPosition(Vector2f(this->window->getSize().x / 2, this->window->getSize().y / 2));
+    rect.setFillColor(Color::Black);
+
+    this->window->draw(rect);
+
+    //Configure pixels
+    rect.setOrigin(0, 0);
+    rect.setFillColor(Color::White);
+    rect.setSize(Vector2f(width / 64, height / 32));
+
+    unsigned int leftPlay = (this->window->getSize().x / 2) - width / 2;
+    unsigned int topPlay = (this->window->getSize().y / 2) - height / 2;
+    
     for(int x = 0; x < 64; x++) {
         for(int y = 0; y < 32; y++) {
             if(this->pixels[x][y] == true) {
-                r.x = x * 10 + 20;
-                r.y = y * 10 + 20;
-                r.w = 10;
-                r.h = 10;
-                SDL_RenderFillRect(this->renderer, &r);
+                rect.setPosition(Vector2f(leftPlay + ((width / 64) * x), topPlay + ((height / 32) * y)));
+                this->window->draw(rect);
             }
         }
     }
-
-    
-    SDL_RenderPresent(renderer);
+   
+    this->window->display();
 }

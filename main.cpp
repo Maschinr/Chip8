@@ -1,70 +1,52 @@
 #include "Chip8.hpp"
 
 #include <iostream>
-#include <SDL.h>
-#include <SDL_image.h>
+#include <SFML/Graphics.hpp>
 #include <string>
 #include <memory>
 
 using namespace std;
+using namespace sf;
 
-bool init(SDL_Window** window, SDL_Renderer** renderer, string title, unsigned int width, unsigned int height) {
-    *window = SDL_CreateWindow(title.c_str(), SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, width, height, 0);
-    
-    if(*window != NULL) {
-        *renderer = SDL_CreateRenderer(*window, -1, SDL_RENDERER_ACCELERATED);
-        if(*renderer != NULL) {
-            int imgFlags = IMG_INIT_PNG;
-            if((IMG_Init(imgFlags) & imgFlags)) {
-                return true;
-            }
-        }
-    }
-    
-    return false;
-}
-
-void cleanup(SDL_Window* window, SDL_Renderer* renderer) {
-    SDL_DestroyRenderer(renderer);
-    SDL_DestroyWindow(window);
-    IMG_Quit();
-    SDL_Quit();
-}
-
+//TODO imgui gui where things like clockspeed rom and so on can be changed Titlebar and playarea is height - titlebar?
+//TODO Change function map to many inline class member functions
+//TODO implement all missing opcodes
 int main(int argc, char* argv[]) {
-    SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO);
 
-    SDL_Window* window;
-    SDL_Renderer* renderer;
-    SDL_Event event;
-
-    if(init(&window, &renderer, "Test", 1280, 720) == false) {
-        cerr << "Error initializing graphics";
+    if(argc != 2) {
+        cerr << "Error loading Rom" << endl;
         return -1;
     }
 
-    //Later generic class Emulator
-    unique_ptr<Chip8> emulated = make_unique<Chip8>(renderer);
-    if(!emulated->loadFile("./roms/BC_test.ch8")) {
+    RenderWindow window(VideoMode(1280, 720), "Chip8");
+    unique_ptr<Chip8> emulated = make_unique<Chip8>(&window);
+    if(!emulated->loadFile(argv[1])) {
         cerr << "Error loading Rom" << endl;
+        return -1;
     }
 
-    bool running = true;
-    while(running) {
-        while(SDL_PollEvent(&event)) {
-            if(event.type == SDL_QUIT) {
-               running = false; /* Game ended */
+    Clock cycleClock;
+
+    while(window.isOpen()) {
+        Event event;
+
+        while(window.pollEvent(event)) {
+            if (event.type == Event::Closed) {
+                window.close();
+            } else if (event.type == Event::Resized) {
+                View view = View(FloatRect(0.f, 0.f, window.getSize().x, window.getSize().y));
+	            window.setView(view);
             }
-            emulated->event(event);
+        }
+
+        if(cycleClock.getElapsedTime() > milliseconds(seconds(1).asMilliseconds() / 500)) {
+            cycleClock.restart();
+            if(!emulated->cycle()) {
+                break;
+            }
         }
         
-        //Simulation Code
-        if(!emulated->cycle()) {
-            break;
-        }
     }
-    
-    cleanup(window, renderer);
 
     return 0;
 }
