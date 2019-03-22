@@ -5,6 +5,7 @@
 #include <iterator>
 #include <iostream>
 #include <memory.h>
+#include <bitset>
 
 using namespace std;
 
@@ -63,7 +64,7 @@ bool Chip8::cycle() {
     //Fetch opcode, current position + cur position + 1 because opcode is 16 bits
     this->opcode = this->memory[this->pc] << 8 | this->memory[this->pc + 1];
 
-    cout << "Performing opcode: " << hex << uppercase << this->opcode << dec << nouppercase << endl; 
+    //cout << "Performing opcode: " << hex << uppercase << this->opcode << dec << nouppercase << endl; 
     //cout << hex << uppercase << (this->opcode & 0xF000) << endl;
     
     if ((this->opcode & 0xF000) == 0x0000) { // Zero is special because of unclear identifier, crash if rca 1802 call
@@ -176,6 +177,16 @@ void Chip8::loadFunctions() {
         }
     }; 
 
+    this->opFunctions[0x5000] = [this] () {         // 0x5XY0 Skips the next instruction if VX equals VY. (Usually the next instruction is a jump to skip a code block)
+        //cout << "0x5XY0 Skips the next instruction if VX equals VY." << endl;
+        
+        if(this->V[((this->opcode & 0x0F00) >> 8)] == this->V[((this->opcode & 0x00F0) >> 4)]) {
+            this->pc += 4;
+        } else {
+            this->pc += 2;
+        }
+    }; 
+
     this->opFunctions[0x6000] = [this] () {         // 0x6XNN Sets VX to NN.
         //cout << "0x6XNN Sets VX to NN." << endl;
         this->V[((this->opcode & 0x0F00) >> 8)] = this->opcode & 0x00FF;
@@ -194,9 +205,21 @@ void Chip8::loadFunctions() {
         this->pc += 2;
     };
 
+    this->opFunctions[0x8001] = [this] () {         // 0x8XY1 Sets VX to VX or VY. (Bitwise OR operation)
+        //cout << "0x8XY1 Sets VX to VX or VY. (Bitwise OR operation)" << endl;
+        this->V[((this->opcode & 0x0F00) >> 8)] = (this->V[((this->opcode & 0x0F00) >> 8)] | this->V[((this->opcode & 0x00F0) >> 4)]);
+        this->pc += 2;
+    };
+
     this->opFunctions[0x8002] = [this] () {         // 0x8XY2 Sets VX to VX and VY. (Bitwise AND operation)
         //cout << "0x8XY2 Sets VX to VX and VY." << endl;
         this->V[((this->opcode & 0x0F00) >> 8)] = (this->V[((this->opcode & 0x0F00) >> 8)] & this->V[((this->opcode & 0x00F0) >> 4)]);
+        this->pc += 2;
+    };
+
+    this->opFunctions[0x8003] = [this] () {         // 0x8XY3 Sets VX to VX xor VY.
+        //cout << "0x8XY3 Sets VX to VX xor VY." << endl;
+        this->V[((this->opcode & 0x0F00) >> 8)] = (this->V[((this->opcode & 0x0F00) >> 8)] ^ this->V[((this->opcode & 0x00F0) >> 4)]);
         this->pc += 2;
     };
 
@@ -220,13 +243,45 @@ void Chip8::loadFunctions() {
         //if vy is larger than vx then there is a borrow
         //VY                                        VX
         if(this->V[((opcode & 0x00F0) >> 4)] > (V[((this->opcode & 0x0F00) >> 8)])) {
-            this->V[0xF] = 1;
-        } else {
             this->V[0xF] = 0;
+        } else {
+            this->V[0xF] = 1;
         }
 
         //VX                                    VY
         this->V[((opcode & 0x0F00) >> 8)] -= this->V[((opcode & 0x00F0) >> 4)];
+        this->pc += 2;  
+    };
+
+    this->opFunctions[0x8006] = [this] () {         // 0x8XY6 Stores the least significant bit of VX in VF and then shifts VX to the right by 1.
+        //cout << "0x8XY6 Stores the least significant bit of VX in VF and then shifts VX to the right by 1." << endl;
+        
+        this->V[0xF] = (this->V[((this->opcode & 0x0F00) >> 8)] & 0x01);
+        this->V[((this->opcode & 0x0F00) >> 8)] = this->V[((this->opcode & 0x0F00) >> 8)] >> 1;
+        this->pc += 2;   
+    };
+
+    this->opFunctions[0x8007] = [this] () {         // 0x8XY7 Sets VX to VY minus VX. VF is set to 0 when there's a borrow, and 1 when there isn't.
+        //cout << "0x8XY7 Sets VX to VY minus VX. VF is set to 0 when there's a borrow, and 1 when there isn't." << endl;
+        
+        //if vy is larger than vx then there is a borrow
+        //VY                                        VX
+        if(this->V[((opcode & 0x00F0) >> 4)] < (V[((this->opcode & 0x0F00) >> 8)])) {
+            this->V[0xF] = 0;
+        } else {
+            this->V[0xF] = 1;
+        }
+
+        //VX                                    VY                                  VX
+        this->V[((opcode & 0x0F00) >> 8)] = this->V[((opcode & 0x00F0) >> 4)] - this->V[((opcode & 0x0F00) >> 8)];
+        this->pc += 2;  
+    };
+
+    this->opFunctions[0x800E] = [this] () {         // 0x8XYE Stores the most significant bit of VX in VF and then shifts VX to the left by 1.
+        //cout << "0x8XYE Stores the most significant bit of VX in VF and then shifts VX to the left by 1." << endl;
+        
+        this->V[0xF] = ((this->V[((this->opcode & 0x0F00) >> 8)] & 0x80)) >> 7;
+        this->V[((this->opcode & 0x0F00) >> 8)] = this->V[((this->opcode & 0x0F00) >> 8)] << 1;
         this->pc += 2;  
     };
 
@@ -302,10 +357,25 @@ void Chip8::loadFunctions() {
         this->pc += 2;
     };
 
+    this->opFunctions[0xF01E] = [this] () {         // 0xFX1E Adds VX to I.
+        //cout << "0xFX1E Adds VX to I." << endl;
+        this->I += this->V[((this->opcode & 0x0F00) >> 8)];
+        this->pc += 2;
+    };
+
     this->opFunctions[0xF029] = [this] () {         // 0xFX29 Font loading.
         //cout << "0xFX29 Font loading." << endl;
         unsigned short x = ((this->opcode & 0x0F00) >> 8);
         this->I = this->V[x] * 5;
+        this->pc += 2;
+    };
+
+    this->opFunctions[0xF055] = [this] () {         // 0xFX55 Stores V0 to VX (including VX) in memory starting at address I. The offset from I is increased by 1 for each value written, but I itself is left unmodified.
+        //cout << "0xFX55 Stores V0 to VX (including VX) in memory starting at address I. The offset from I is increased by 1 for each value written, but I itself is left unmodified." << endl;
+        unsigned short x = ((this->opcode & 0x0F00) >> 8); //Last Register to fill
+        for(int i = 0; i <= x; i++) {
+            this->memory[this->I + i] = this->V[i];
+        }
         this->pc += 2;
     };
 
@@ -336,7 +406,6 @@ void Chip8::draw() {
     SDL_SetRenderDrawColor(this->renderer, 255, 255, 255, 255);
     SDL_Rect r;
    
-    this->pixels[0][0] = true;
     for(int x = 0; x < 64; x++) {
         for(int y = 0; y < 32; y++) {
             if(this->pixels[x][y] == true) {
