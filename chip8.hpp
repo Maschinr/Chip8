@@ -8,18 +8,15 @@
 
 class Chip8 {
 public:
-    Chip8(sf::RenderWindow* window);
+    Chip8();
     ~Chip8();
     void reset();
     bool loadFile(std::string path);
     bool cycle();
-
+    void draw(sf::RenderTexture& texture);
 private:
     void loadFunctions();
-    void draw();
     void input();
-
-    sf::RenderWindow* window;
     sf::Clock timerClock;
     
     //Emulator var's
@@ -56,6 +53,7 @@ private:
     unsigned short stack[16];//Stack
     unsigned short sp;//Stack Pointer
     bool keys[16];
+    short lastFrameKey;
 };
 
 #endif //CHIP8_HPP

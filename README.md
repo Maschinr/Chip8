@@ -37,7 +37,7 @@ Uses SFML (https://www.sfml-dev.org) for graphics and input
  0xEX9E | SKP  | :x:
  0xEXA1 | SKNP | :heavy_check_mark:
  0xFX07 | LD   | :heavy_check_mark:
- 0xFX0A | LD   | :x:
+ 0xFX0A | LD   | :heavy_check_mark:
  0xFX15 | LD   | :heavy_check_mark:
  0xFX18 | LD   | :heavy_check_mark:
  0xFX1E | ADD  | :heavy_check_mark:

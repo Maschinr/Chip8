@@ -9,8 +9,7 @@
 using namespace std;
 using namespace sf;
 
-//TODO maybe sfml and then display register and so on with imgui or try imgui in sdl
-Chip8::Chip8(RenderWindow* window) : window(window) {
+Chip8::Chip8() {
     this->loadFunctions();
     this->reset();
 }
@@ -27,6 +26,7 @@ void Chip8::reset() {
     this->drawFlag = false;
     this->dtimer = 0;
     this->stimer = 0;
+    this->lastFrameKey = -1;
 
     //Clear memory
     memset(this->memory, 0, 4096);
@@ -65,8 +65,7 @@ bool Chip8::cycle() {
     //Fetch opcode, current position + cur position + 1 because opcode is 16 bits
     this->opcode = this->memory[this->pc] << 8 | this->memory[this->pc + 1];
 
-    //cout << "Performing opcode: " << hex << uppercase << this->opcode << dec << nouppercase << endl; 
-    //cout << hex << uppercase << (this->opcode & 0xF000) << endl;
+    cout << "Performing opcode: " << hex << uppercase << this->opcode << dec << nouppercase << endl; 
     
     if ((this->opcode & 0xF000) == 0x0000) { // Zero is special because of unclear identifier, crash if rca 1802 call
         if(this->opFunctions.find(this->opcode) != this->opFunctions.end()) {
@@ -97,11 +96,6 @@ bool Chip8::cycle() {
             --this->stimer;
         }  
     }
-
-    if(this->drawFlag) {
-        this->draw();
-        this->drawFlag = false;
-    }
    
     return true;
 }
@@ -109,99 +103,115 @@ bool Chip8::cycle() {
 void Chip8::input() {
     //Check key presses
     //TODO maybe map or somewhat like that?
-
+    this->lastFrameKey = -1;
     if (Keyboard::isKeyPressed(Keyboard::X)) {
         this->keys[0] = true;
+        this->lastFrameKey = 0;
     } else {
         this->keys[0] = false;
     }
 
     if (Keyboard::isKeyPressed(Keyboard::Num1)) {
         this->keys[1] = true;
+        this->lastFrameKey = 1;
     } else {
         this->keys[1] = false;
     }
     
     if (Keyboard::isKeyPressed(Keyboard::Num2)) {
         this->keys[2] = true;
+        this->lastFrameKey = 2;
     } else {
         this->keys[2] = false;
     }
 
     if (Keyboard::isKeyPressed(Keyboard::Num3)) {
         this->keys[3] = true;
+        this->lastFrameKey = 3;
     } else {
         this->keys[3] = false;
     }
 
     if (Keyboard::isKeyPressed(Keyboard::Q)) {
         this->keys[4] = true;
+        this->lastFrameKey = 4;
     } else {
         this->keys[4] = false;
     }
 
     if (Keyboard::isKeyPressed(Keyboard::W)) {
         this->keys[5] = true;
+        this->lastFrameKey = 5;
     } else {
         this->keys[5] = false;
     }
 
     if (Keyboard::isKeyPressed(Keyboard::E)) {
         this->keys[6] = true;
+        this->lastFrameKey = 6;
     } else {
         this->keys[6] = false;
     }
 
     if (Keyboard::isKeyPressed(Keyboard::A)) {
         this->keys[7] = true;
+        this->lastFrameKey = 7;
     } else {
         this->keys[7] = false;
     }
 
     if (Keyboard::isKeyPressed(Keyboard::S)) {
         this->keys[8] = true;
+        this->lastFrameKey = 8;
     } else {
         this->keys[8] = false;
     }
 
     if (Keyboard::isKeyPressed(Keyboard::D)) {
         this->keys[9] = true;
+        this->lastFrameKey = 9;
     } else {
         this->keys[9] = false;
     }
 
     if (Keyboard::isKeyPressed(Keyboard::Y)) {
         this->keys[10] = true;
+        this->lastFrameKey = 10;
     } else {
         this->keys[10] = false;
     }
 
     if (Keyboard::isKeyPressed(Keyboard::C)) {
         this->keys[11] = true;
+        this->lastFrameKey = 11;
     } else {
         this->keys[11] = false;
     }
 
     if (Keyboard::isKeyPressed(Keyboard::Num4)) {
         this->keys[12] = true;
+        this->lastFrameKey = 12;
     } else {
         this->keys[12] = false;
     }
 
     if (Keyboard::isKeyPressed(Keyboard::R)) {
         this->keys[13] = true;
+        this->lastFrameKey = 13;
     } else {
         this->keys[13] = false;
     }
 
     if (Keyboard::isKeyPressed(Keyboard::F)) {
         this->keys[14] = true;
+        this->lastFrameKey = 14;
     } else {
         this->keys[14] = false;
     }
 
     if (Keyboard::isKeyPressed(Keyboard::V)) {
         this->keys[15] = true;
+        this->lastFrameKey = 15;
     } else {
         this->keys[15] = false;
     }
@@ -363,6 +373,16 @@ void Chip8::loadFunctions() {
         this->pc += 2;  
     };
 
+    this->opFunctions[0x9000] = [this] () {         // 0x9XY0 Skips the next instruction if VX doesn't equal VY. (Usually the next instruction is a jump to skip a code block)
+        //cout << "0x9XY0 Skips the next instruction if VX doesn't equal VY." << endl;
+        
+        if(this->V[((this->opcode & 0x0F00) >> 8)] != this->V[((this->opcode & 0x00F0) >> 4)]) {
+            this->pc += 4;
+        } else {
+            this->pc += 2;
+        }
+    };
+
     this->opFunctions[0xA000] = [this] () {         // 0xANNN Sets I to the address NNN.
         //cout << "0xANNN Sets I to the address NNN." << endl;
         this->I = this->opcode & 0x0FFF;
@@ -404,6 +424,16 @@ void Chip8::loadFunctions() {
         this->pc += 2;
     };
 
+    this->opFunctions[0xE09E] = [this] () {         // 0xEX9E Skips the next instruction if the key stored in VX is pressed. (Usually the next instruction is a jump to skip a code block)
+        //cout << "0xEX9E Skips the next instruction if the key stored in VX is pressed." << endl;
+
+        if(this->keys[this->V[((this->opcode & 0x0F00) >> 8)]] == true) {
+            this->pc += 4;
+        } else {
+            this->pc += 2;
+        }
+    };
+
     this->opFunctions[0xE0A1] = [this] () {         // 0xEXA1 Skips the next instruction if the key stored in VX isn't pressed.
         //cout << "0xEXA1 Skips the next instruction if the key stored in VX isn't pressed." << endl;
 
@@ -419,6 +449,15 @@ void Chip8::loadFunctions() {
 
         this->V[((this->opcode & 0x0F00) >> 8)] = this->dtimer;
         this->pc += 2;
+    };
+
+    this->opFunctions[0xF00A] = [this] () {         // 0xFX0A A key press is awaited, and then stored in VX. (Blocking Operation. All instruction halted until next key event)
+        //cout << "0xFX0A A key press is awaited, and then stored in VX." << endl;
+
+        if(this->lastFrameKey != -1) {
+            this->V[(this->opcode & 0x0F00) >> 8] = this->lastFrameKey;
+            this->pc += 2;
+        }
     };
 
     this->opFunctions[0xF015] = [this] () {         // 0xFX15 Sets the delay timer to VX.
@@ -477,48 +516,23 @@ void Chip8::loadFunctions() {
     };
 }
 
-void Chip8::draw() {
-    this->window->clear(Color::Blue);
-   
-    unsigned int w_width = this->window->getSize().x;
-    w_width = ((int)(w_width / 64)) * 64;
-    unsigned int w_height = this->window->getSize().y;
-    w_height = ((int)(w_height / 32)) * 32;
-    unsigned int width, height;
-
-    if(w_width / 2 > w_height) { // The playground can't be stretched all the way because height is not enough
-        height = w_height;
-        width = height * 2;
-    } else {
-        width = w_width;
-        height = width / 2;
+void Chip8::draw(RenderTexture& texture) {
+    if(!texture.create(64, 32)) {
+        throw "Failed to create texture!";
     }
 
-    RectangleShape rect(Vector2f(width, height));
+    texture.clear(Color::Red);
 
-    //Configure playarea
-    rect.setOrigin(Vector2f(width / 2, height / 2));
-    rect.setPosition(Vector2f(this->window->getSize().x / 2, this->window->getSize().y / 2));
-    rect.setFillColor(Color::Black);
-
-    this->window->draw(rect);
-
-    //Configure pixels
-    rect.setOrigin(0, 0);
+    RectangleShape rect(Vector2f(1, 1)); // Draw one pixel
     rect.setFillColor(Color::White);
-    rect.setSize(Vector2f(width / 64, height / 32));
-
-    unsigned int leftPlay = (this->window->getSize().x / 2) - width / 2;
-    unsigned int topPlay = (this->window->getSize().y / 2) - height / 2;
     
     for(int x = 0; x < 64; x++) {
         for(int y = 0; y < 32; y++) {
             if(this->pixels[x][y] == true) {
-                rect.setPosition(Vector2f(leftPlay + ((width / 64) * x), topPlay + ((height / 32) * y)));
-                this->window->draw(rect);
+                rect.setPosition(Vector2f(x, y));
+                texture.draw(rect);
             }
         }
     }
-   
-    this->window->display();
+    texture.display();
 }
