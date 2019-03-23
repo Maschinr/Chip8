@@ -1,9 +1,25 @@
 # Chip8
 Chip8 Emulator/Interpreter written in Cpp
 
-Still in the making, not working properly
+## TODO
 
-Uses SFML (https://www.sfml-dev.org) for graphics and input 
+### Must
+* Add more options to the General Menu
+* Save preferences that where changed in the Menus in an external file (JSON?)
+* Performance Optimizations (Replace the opcode function map with inline functions?)
+* Implement all missing opcodes
+* Memory, Register, Stackpointer viewer for Chip-8
+* Fix opcodes, some are wrong atm
+* Fix pixel bug(One off to the right), maybe has something to do with the wrong opcodes
+* Implement nicer way to fetch the keyboard input 
+* Cleanup
+
+### Maybe
+* Implement Super Chip-48 opcodes and display modes
+* Assembler/Disassembler for Chip-8
+
+### Maybe, Maybe, Maybe
+* Add another Emulator
 
 ## Instructions:
 
@@ -34,7 +50,7 @@ Uses SFML (https://www.sfml-dev.org) for graphics and input
  0xBNNN | JP   | :x:
  0xCXNN | RND  | :heavy_check_mark:
  0xDXYN | DRW  | :heavy_check_mark:
- 0xEX9E | SKP  | :x:
+ 0xEX9E | SKP  | :heavy_check_mark:
  0xEXA1 | SKNP | :heavy_check_mark:
  0xFX07 | LD   | :heavy_check_mark:
  0xFX0A | LD   | :heavy_check_mark:
@@ -59,3 +75,10 @@ Uses SFML (https://www.sfml-dev.org) for graphics and input
  0xFX30 | LD   | :x:
  0xFX75 | LD   | :x:
  0xFX85 | LD   | :x:
+
+## Credits
+
+Uses SFML (https://www.sfml-dev.org) for graphics and input  
+Uses Dear ImGui (https://github.com/ocornut/imgui) for Gui  
+Uses ImGui-SFML (https://github.com/eliasdaler/imgui-sfml) as ImGui<->SFML Binding  
+Uses ImGuiFileDialog (https://github.com/aiekick/ImGuiFileDialog) as ImGui widget for file opening  

@@ -12,13 +12,16 @@ public:
     ~Chip8();
     void reset();
     bool loadFile(std::string path);
-    bool cycle();
+    void cycle();
     void draw(sf::RenderTexture& texture);
+    bool isRomLoaded() { return this->romLoaded; }
 private:
     void loadFunctions();
     void input();
     sf::Clock timerClock;
     
+    bool romLoaded;
+
     //Emulator var's
     std::map<unsigned short, std::function<void()>> opFunctions;
 

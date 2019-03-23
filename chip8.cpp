@@ -27,7 +27,7 @@ void Chip8::reset() {
     this->dtimer = 0;
     this->stimer = 0;
     this->lastFrameKey = -1;
-
+    this->romLoaded = false;
     //Clear memory
     memset(this->memory, 0, 4096);
     memset(this->pixels, 0, 64 * 32);
@@ -40,64 +40,79 @@ void Chip8::reset() {
 
 bool Chip8::loadFile(string path) {
     ifstream rom(path, ios::binary);
-
+    this->reset();
     if(rom.is_open()) {
-        this->reset();
         //TODO change -> Second parameter of istreambuf_iterator describes that no traits should be used
         vector<unsigned char> buffer(istreambuf_iterator<char>(rom), {});
+        rom.close();
 
         // TODO cpp way
         for(size_t i = 0; i < buffer.size(); ++i) {
             this->memory[i + 512] = buffer[i];
         }
 
-        
+        this->romLoaded = true;
         return true;
     } else {
         return false;
     }
 }
 
-bool Chip8::cycle() {
+void Chip8::cycle() {
+    if(this->romLoaded == true) {
+        this->input();
 
-    this->input();
+        //Fetch opcode, current position + cur position + 1 because opcode is 16 bits
+        this->opcode = this->memory[this->pc] << 8 | this->memory[this->pc + 1];
 
-    //Fetch opcode, current position + cur position + 1 because opcode is 16 bits
-    this->opcode = this->memory[this->pc] << 8 | this->memory[this->pc + 1];
-
-    cout << "Performing opcode: " << hex << uppercase << this->opcode << dec << nouppercase << endl; 
-    
-    if ((this->opcode & 0xF000) == 0x0000) { // Zero is special because of unclear identifier, crash if rca 1802 call
-        if(this->opFunctions.find(this->opcode) != this->opFunctions.end()) {
-            this->opFunctions[this->opcode]();
-        } else {
-            cerr << "RCA 1802 Call" << endl;
-            return false;
-        }
-    } else if ((this->opcode & 0xF000) == 0x8000) { // 8 has 9 possible values found out by the first and last
-        this->opFunctions[(this->opcode & 0xF00F)]();
-    } else if ((this->opcode & 0xF000) == 0xF000 || (this->opcode & 0xF000) == 0xE000) { //E has 2 and F has 9 possible codes found out by the first and the last 2 digits
-        this->opFunctions[(this->opcode & 0xF0FF)]();
-    } else { // If its an exclusive opcode
-        this->opFunctions[(this->opcode & 0xF000)]();
-    }
-
-    if(timerClock.getElapsedTime() > milliseconds(seconds(1).asMilliseconds() / 60)) {
-        timerClock.restart();
-        if( this->dtimer > 0) {
-            --this->dtimer;
-        }
-            
-        if(this->stimer > 0) {
-            if(stimer == 1) {
-                cout << "TODO SOUND" << endl;
+        //cout << "Performing opcode: " << hex << uppercase << this->opcode << dec << nouppercase << endl; 
+        
+        if ((this->opcode & 0xF000) == 0x0000) { // Zero is special because of unclear identifier, crash if rca 1802 call
+            if(this->opFunctions.find(this->opcode) != this->opFunctions.end()) {
+                this->opFunctions[this->opcode]();
+            } else {
+                this->reset();
+                cerr << "Invalid Rom" << endl;
+                //throw "RCA 1802 Call";
             }
+        } else if ((this->opcode & 0xF000) == 0x8000) { // 8 has 9 possible values found out by the first and last
+            if(this->opFunctions.find((this->opcode & 0xF00F)) != this->opFunctions.end()) {
+                this->opFunctions[(this->opcode & 0xF00F)]();
+            } else {
+                this->reset();
+                cerr << "Invalid Rom" << endl;
+            } 
+        } else if ((this->opcode & 0xF000) == 0xF000 || (this->opcode & 0xF000) == 0xE000) { //E has 2 and F has 9 possible codes found out by the first and the last 2 digits
+            if(this->opFunctions.find((this->opcode & 0xF0FF)) != this->opFunctions.end()) {
+                this->opFunctions[(this->opcode & 0xF0FF)]();
+            } else {
+                this->reset();
+                cerr << "Invalid Rom" << endl;
+            } 
+        } else { // If its an exclusive opcode
+            if(this->opFunctions.find((this->opcode & 0xF000)) != this->opFunctions.end()) {
+                this->opFunctions[(this->opcode & 0xF000)]();
+            } else {
+                this->reset();
+                cerr << "Invalid Rom" << endl;
+            } 
+        }
 
-            --this->stimer;
-        }  
+        if(timerClock.getElapsedTime() > milliseconds(seconds(1).asMilliseconds() / 60)) {
+            timerClock.restart();
+            if( this->dtimer > 0) {
+                --this->dtimer;
+            }
+                
+            if(this->stimer > 0) {
+                if(stimer == 1) {
+                    cout << "TODO SOUND" << endl;
+                }
+
+                --this->stimer;
+            }  
+        }
     }
-   
-    return true;
 }
 
 void Chip8::input() {
