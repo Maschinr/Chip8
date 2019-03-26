@@ -1,9 +1,11 @@
 # Chip8
+
 Chip8 Emulator/Interpreter written in Cpp
 
 ## TODO
 
 ### Must
+
 * Add more options to the General Menu
 * Save preferences that where changed in the Menus in an external file (JSON?)
 * Performance Optimizations (Replace the opcode function map with inline functions?)
@@ -11,24 +13,27 @@ Chip8 Emulator/Interpreter written in Cpp
 * Memory, Register, Stackpointer viewer for Chip-8
 * Fix opcodes, some are wrong atm
 * Fix pixel bug(One off to the right), maybe has something to do with the wrong opcodes
-* Implement nicer way to fetch the keyboard input 
+* Implement nicer way to fetch the keyboard input
 * Cleanup
 
 ### Maybe
+
 * Implement Super Chip-48 opcodes and display modes
 * Assembler/Disassembler for Chip-8
 
 ### Maybe, Maybe, Maybe
+
 * Add another Emulator
 
-## Instructions:
+## Instructions
 
 ### Standard Chip-8 Instructions
+
  Hex | Mnemonic | Status  
  --- | --- | ---
- 0x0NNN | SYS  | :x:               
+ 0x0NNN | SYS  | :x:
  0x00E0 | CLS  | :heavy_check_mark:
- 0x00EE | RET  | :heavy_check_mark: 
+ 0x00EE | RET  | :heavy_check_mark:
  0x1NNN | JP   | :heavy_check_mark:
  0x2NNN | CALL | :heavy_check_mark:
  0x3XNN | SE   | :heavy_check_mark:
@@ -63,6 +68,7 @@ Chip8 Emulator/Interpreter written in Cpp
  0xFX65 | LD   | :heavy_check_mark:
 
 ### Super Chip-48 Instructions
+
    Hex  | Mnemonic | Status  
  ---    | ---  | ---
  0x00CN | SCD  | :x:
@@ -78,7 +84,7 @@ Chip8 Emulator/Interpreter written in Cpp
 
 ## Credits
 
-Uses SFML (https://www.sfml-dev.org) for graphics and input  
-Uses Dear ImGui (https://github.com/ocornut/imgui) for Gui  
-Uses ImGui-SFML (https://github.com/eliasdaler/imgui-sfml) as ImGui<->SFML Binding  
-Uses ImGuiFileDialog (https://github.com/aiekick/ImGuiFileDialog) as ImGui widget for file opening  
+Uses SFML (<https://www.sfml-dev.org>) for graphics and input  
+Uses Dear ImGui (<https://github.com/ocornut/imgui>) for Gui  
+Uses ImGui-SFML (<https://github.com/eliasdaler/imgui-sfml>) as ImGui<->SFML Binding  
+Uses ImGuiFileDialog (<https://github.com/aiekick/ImGuiFileDialog>) as ImGui widget for file opening  
