@@ -3,19 +3,31 @@
 #include <fstream>
 #include <vector>
 #include <iterator>
+#include <imgui/imgui.h>
 
 using namespace std;
 using namespace sf;
 
 Chip8::Chip8() {
-    this->reset();
+    this->memoryViewerOpened = false;
+    this->stackViewerOpened = false;
+    this->registerViewerOpened = false;
+    this->hardReset();
 }
 
 Chip8::~Chip8() {
 
 }
 
-void Chip8::reset() {
+void Chip8::hardReset() {
+    this->softReset();
+    this->romLoaded = false;
+    memset(this->memory, 0, 4096);
+    memcpy(&this->memory[0], &this->fontset[0], 80);
+
+}
+
+void Chip8::softReset() {
     this->pc = 0x200;
     this->opcode = 0;
     this->I = 0;
@@ -24,20 +36,40 @@ void Chip8::reset() {
     this->dtimer = 0;
     this->stimer = 0;
     this->lastFrameKey = -1;
-    this->romLoaded = false;
-    //Clear memory
-    memset(this->memory, 0, 4096);
     memset(this->pixels, 0, 64 * 32);
     memset(this->keys, 0, sizeof(bool) * 16);
     memset(this->V, 0, 16);
-    //Load fontset
-    memcpy(&this->memory[0], &this->fontset[0], 80);
+}
 
+void Chip8::drawMenuBarGUI() {
+    if (ImGui::BeginMenu("Chip8")) {
+        if(ImGui::MenuItem("Memory", /*TODO shortcut*/"")) {
+           this->memoryViewerOpened = !this->memoryViewerOpened;
+        }
+        if(ImGui::MenuItem("Stack", /*TODO shortcut*/"")) {
+            this->stackViewerOpened = !this->stackViewerOpened;
+        }
+        if(ImGui::MenuItem("Register", /*TODO shortcut*/"")) {
+            this->registerViewerOpened = !this->registerViewerOpened;
+        }
+        ImGui::EndMenu();
+    }
+}
+
+void Chip8::drawMiscGUI() {
+    if(this->registerViewerOpened) {
+        ImGui::Begin("Chip 8 Register's", &this->registerViewerOpened); 
+        ImGui::BeginChild("Registers");
+        for (int i = 0; i < 16; i++)
+            ImGui::Text("%02d: %d", i + 1, this->V[i]);
+        ImGui::EndChild();
+        ImGui::End();
+    }
 }
 
 bool Chip8::loadFile(string path) {
     ifstream rom(path, ios::binary);
-    this->reset();
+    this->hardReset();
     if(rom.is_open()) {
         //TODO change -> Second parameter of istreambuf_iterator describes that no traits should be used
         vector<unsigned char> buffer(istreambuf_iterator<char>(rom), {});
@@ -62,7 +94,7 @@ void Chip8::cycle() {
         //Fetch opcode, current position + cur position + 1 because opcode is 16 bits
         this->opcode = this->memory[this->pc] << 8 | this->memory[this->pc + 1];
 
-        cout << "Performing opcode: " << hex << uppercase << this->opcode << dec << nouppercase << endl; 
+        //cout << "Performing opcode: " << hex << uppercase << this->opcode << dec << nouppercase << endl; 
         unsigned short X = (this->opcode & 0x0F00) >> 8;
         unsigned short Y = (this->opcode & 0x00F0) >> 4;
         unsigned short NNN = this->opcode & 0x0FFF;

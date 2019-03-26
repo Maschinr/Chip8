@@ -55,20 +55,31 @@ int main(int argc, char* argv[]) {
         //Menu Bar
         if (ImGui::BeginMainMenuBar()) {
             menuBarHeight = ImGui::GetWindowSize().y;
-            if (ImGui::Button("General")) {
-                //TODO no highlight
-                generalMenuOpened = true;
-            }
 
-            if (ImGui::BeginMenu("Rom")) {
-                if(ImGui::MenuItem("Load", /*TODO shortcut*/"")) {
-                    loadRomMenuOpened = true;
+            if (ImGui::BeginMenu("General")) {
+                if(ImGui::MenuItem("General Options")) {
+                    generalMenuOpened = !generalMenuOpened;
                 }
-                if(ImGui::MenuItem("Close", /*TODO shortcut*/"")) {
-                    emulated->reset();
+                if(ImGui::MenuItem("Load ROM", /*TODO shortcut*/"")) {
+                    loadRomMenuOpened = !loadRomMenuOpened;
                 }
+                if(ImGui::MenuItem("Reload ROM", /*TODO shortcut*/"")) {
+                    if(emulated->isRomLoaded()) {
+                        emulated->softReset();
+                    }
+                }
+                if(ImGui::MenuItem("Close ROM", /*TODO shortcut*/"")) {
+                    if(emulated->isRomLoaded()) {
+                        emulated->hardReset();
+                    }
+                }
+
                 ImGui::EndMenu();
             }
+
+            //Let Emualtor build his stuff
+            emulated->drawMenuBarGUI();
+
             ImGui::EndMenuBar();
 
             if (loadRomMenuOpened)
@@ -79,7 +90,6 @@ int main(int argc, char* argv[]) {
 					if (ImGuiFileDialog::Instance()->IsOk == true)
 					{
 						string filePathName = ImGuiFileDialog::Instance()->GetFilepathName();
-                        cout << filePathName << endl;
                         if(!emulated->loadFile(filePathName)) {
                             cerr << "Error loading Rom" << endl;
                         }
@@ -87,12 +97,14 @@ int main(int argc, char* argv[]) {
 					loadRomMenuOpened = false;
 				}
 			}
+
+            emulated->drawMiscGUI();
         }
         ImGui::End();
 
         if(generalMenuOpened == true) {
             //TODO Fixed size, not moveable, directly under general button
-            ImGui::Begin("General", &generalMenuOpened);
+            ImGui::Begin("General Options", &generalMenuOpened);
             ImGui::ColorEdit4("Color", bgColor); // TODO configure
             ImGui::SliderInt("Clock Speed", &clockSpeed, 1, 1000);
             //TODO Set Emulator

@@ -10,16 +10,24 @@ class Chip8 {
 public:
     Chip8();
     ~Chip8();
-    void reset();
+    void hardReset();
+    void softReset();
     bool loadFile(std::string path);
     void cycle();
     void draw(sf::RenderTexture& texture);
     bool isRomLoaded() { return this->romLoaded; }
+    void drawMenuBarGUI();
+    void drawMiscGUI();
 private:
     void input();
     sf::Clock timerClock;
     
     bool romLoaded;
+
+    //GUI var's
+    bool memoryViewerOpened;
+    bool stackViewerOpened;
+    bool registerViewerOpened;
 
     //Emulator var's
     unsigned char fontset[80] =
