@@ -11,19 +11,7 @@
 using namespace std;
 using namespace sf;
 
-//TODO imgui gui where things like clockspeed rom and so on can be changed Titlebar and playarea is height - titlebar?
-//TODO save imgui preferences to file
-//TODO Change function map to many inline class member functions
-//TODO implement all missing opcodes
-//TODO pixels are one off?
-//TODO some opcodes are wrong, build debugger with imgui
-//TODO license stuff
-//TODO performance
-
-//UI Stuff todo
-//Clock speed ? wrong or performance issue?
-//Choose active emulator
-//Menubar item for active emulator -> assembler, memory viewer and everything the emulator can do
+//TODO anti flicker mode with array of last pixel and check if it changed, if it didnt then dont redraw?
 int main(int argc, char* argv[]) {
 
     RenderWindow window(VideoMode(1280, 720), "Chip8");

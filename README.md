@@ -45,9 +45,9 @@ Chip8 Emulator/Interpreter written in Cpp
  0x8XY6 | SHR  | :heavy_check_mark:
  0x8XY7 | SUBN | :heavy_check_mark:
  0x8XYE | SHL  | :heavy_check_mark:
- 0x9XY0 | SNE  | :x:
+ 0x9XY0 | SNE  | :heavy_check_mark:
  0xANNN | LD   | :heavy_check_mark:
- 0xBNNN | JP   | :x:
+ 0xBNNN | JP   | :heavy_check_mark:
  0xCXNN | RND  | :heavy_check_mark:
  0xDXYN | DRW  | :heavy_check_mark:
  0xEX9E | SKP  | :heavy_check_mark:
