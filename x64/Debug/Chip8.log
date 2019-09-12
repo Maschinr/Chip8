@@ -1,0 +1,113 @@
+﻿  chip8.cpp
+C:\Users\Daniel\Desktop\Programmieren\Chip8\Chip8.hpp(158,18): warning C4244:  "=": Konvertierung von "unsigned short" in "unsigned char", möglicher Datenverlust
+C:\Users\Daniel\Desktop\Programmieren\Chip8\Chip8.hpp(321,26): warning C4244:  "=": Konvertierung von "short" in "unsigned char", möglicher Datenverlust
+C:\Users\Daniel\Desktop\Programmieren\Chip8\chip8.cpp(421,46): warning C4244:  "Argument": Konvertierung von "int" in "T", möglicher Datenverlust
+C:\Users\Daniel\Desktop\Programmieren\Chip8\chip8.cpp(421,46): warning C4244:         with
+C:\Users\Daniel\Desktop\Programmieren\Chip8\chip8.cpp(421,46): warning C4244:         [
+C:\Users\Daniel\Desktop\Programmieren\Chip8\chip8.cpp(421,46): warning C4244:             T=float
+C:\Users\Daniel\Desktop\Programmieren\Chip8\chip8.cpp(421,46): warning C4244:         ]
+  ImGuiFileDialog.cpp
+C:\Users\Daniel\Desktop\Programmieren\Chip8\chip8.cpp(421,43): warning C4244:  "Argument": Konvertierung von "int" in "T", möglicher Datenverlust
+C:\Users\Daniel\Desktop\Programmieren\Chip8\chip8.cpp(421,43): warning C4244:         with
+C:\Users\Daniel\Desktop\Programmieren\Chip8\chip8.cpp(421,43): warning C4244:         [
+C:\Users\Daniel\Desktop\Programmieren\Chip8\chip8.cpp(421,43): warning C4244:             T=float
+C:\Users\Daniel\Desktop\Programmieren\Chip8\chip8.cpp(421,43): warning C4244:         ]
+C:\Users\Daniel\Desktop\Programmieren\Chip8\include\imgui-filedialogue\ImGuiFileDialog.cpp(44,28): warning C4267:  "Initialisierung": Konvertierung von "size_t" nach "int", Datenverlust möglich
+C:\Users\Daniel\Desktop\Programmieren\Chip8\include\imgui-filedialogue\ImGuiFileDialog.cpp(50,40): warning C4267:  "=": Konvertierung von "size_t" nach "int", Datenverlust möglich
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.22.27905\include\xstring(2348,23): warning C4244:  "Argument": Konvertierung von "wchar_t" in "const _Elem", möglicher Datenverlust
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.22.27905\include\xstring(2348,23): warning C4244:         with
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.22.27905\include\xstring(2348,23): warning C4244:         [
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.22.27905\include\xstring(2348,23): warning C4244:             _Elem=char
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.22.27905\include\xstring(2348,23): warning C4244:         ]
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.22.27905\include\xstring(2359): message :  Siehe Verweis auf die gerade kompilierte Instanziierung "void std::basic_string<char,std::char_traits<char>,std::allocator<char>>::_Construct<wchar_t*>(_Iter,const _Iter,std::input_iterator_tag)" der Funktions-Vorlage.
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.22.27905\include\xstring(2359): message :         with
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.22.27905\include\xstring(2359): message :         [
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.22.27905\include\xstring(2359): message :             _Iter=wchar_t *
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.22.27905\include\xstring(2359): message :         ]
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.22.27905\include\xstring(2359): message :  Siehe Verweis auf die gerade kompilierte Instanziierung "void std::basic_string<char,std::char_traits<char>,std::allocator<char>>::_Construct<wchar_t*>(_Iter,const _Iter,std::input_iterator_tag)" der Funktions-Vorlage.
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.22.27905\include\xstring(2359): message :         with
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.22.27905\include\xstring(2359): message :         [
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.22.27905\include\xstring(2359): message :             _Iter=wchar_t *
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.22.27905\include\xstring(2359): message :         ]
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.22.27905\include\xstring(2339): message :  Siehe Verweis auf die gerade kompilierte Instanziierung "void std::basic_string<char,std::char_traits<char>,std::allocator<char>>::_Construct<wchar_t*>(const _Iter,const _Iter,std::forward_iterator_tag)" der Funktions-Vorlage.
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.22.27905\include\xstring(2339): message :         with
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.22.27905\include\xstring(2339): message :         [
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.22.27905\include\xstring(2339): message :             _Iter=wchar_t *
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.22.27905\include\xstring(2339): message :         ]
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.22.27905\include\xstring(2339): message :  Siehe Verweis auf die gerade kompilierte Instanziierung "void std::basic_string<char,std::char_traits<char>,std::allocator<char>>::_Construct<wchar_t*>(const _Iter,const _Iter,std::forward_iterator_tag)" der Funktions-Vorlage.
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.22.27905\include\xstring(2339): message :         with
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.22.27905\include\xstring(2339): message :         [
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.22.27905\include\xstring(2339): message :             _Iter=wchar_t *
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.22.27905\include\xstring(2339): message :         ]
+C:\Users\Daniel\Desktop\Programmieren\Chip8\include\imgui-filedialogue\ImGuiFileDialog.cpp(112): message :  Siehe Verweis auf die gerade kompilierte Instanziierung "std::basic_string<char,std::char_traits<char>,std::allocator<char>>::basic_string<std::_String_iterator<std::_String_val<std::_Simple_types<_Elem>>>,void>(_Iter,_Iter,const _Alloc &)" der Funktions-Vorlage.
+C:\Users\Daniel\Desktop\Programmieren\Chip8\include\imgui-filedialogue\ImGuiFileDialog.cpp(112): message :         with
+C:\Users\Daniel\Desktop\Programmieren\Chip8\include\imgui-filedialogue\ImGuiFileDialog.cpp(112): message :         [
+C:\Users\Daniel\Desktop\Programmieren\Chip8\include\imgui-filedialogue\ImGuiFileDialog.cpp(112): message :             _Elem=wchar_t,
+C:\Users\Daniel\Desktop\Programmieren\Chip8\include\imgui-filedialogue\ImGuiFileDialog.cpp(112): message :             _Iter=std::_String_iterator<std::_String_val<std::_Simple_types<wchar_t>>>,
+C:\Users\Daniel\Desktop\Programmieren\Chip8\include\imgui-filedialogue\ImGuiFileDialog.cpp(112): message :             _Alloc=std::allocator<char>
+C:\Users\Daniel\Desktop\Programmieren\Chip8\include\imgui-filedialogue\ImGuiFileDialog.cpp(112): message :         ]
+  imgui-SFML.cpp
+C:\Users\Daniel\Desktop\Programmieren\Chip8\include\imgui-filedialogue\ImGuiFileDialog.cpp(112): message :  Siehe Verweis auf die gerade kompilierte Instanziierung "std::basic_string<char,std::char_traits<char>,std::allocator<char>>::basic_string<std::_String_iterator<std::_String_val<std::_Simple_types<_Elem>>>,void>(_Iter,_Iter,const _Alloc &)" der Funktions-Vorlage.
+C:\Users\Daniel\Desktop\Programmieren\Chip8\include\imgui-filedialogue\ImGuiFileDialog.cpp(112): message :         with
+C:\Users\Daniel\Desktop\Programmieren\Chip8\include\imgui-filedialogue\ImGuiFileDialog.cpp(112): message :         [
+C:\Users\Daniel\Desktop\Programmieren\Chip8\include\imgui-filedialogue\ImGuiFileDialog.cpp(112): message :             _Elem=wchar_t,
+C:\Users\Daniel\Desktop\Programmieren\Chip8\include\imgui-filedialogue\ImGuiFileDialog.cpp(112): message :             _Iter=std::_String_iterator<std::_String_val<std::_Simple_types<wchar_t>>>,
+C:\Users\Daniel\Desktop\Programmieren\Chip8\include\imgui-filedialogue\ImGuiFileDialog.cpp(112): message :             _Alloc=std::allocator<char>
+C:\Users\Daniel\Desktop\Programmieren\Chip8\include\imgui-filedialogue\ImGuiFileDialog.cpp(112): message :         ]
+C:\Users\Daniel\Desktop\Programmieren\Chip8\include\imgui-sfml\imgui-SFML.cpp(417,55): warning C4312:  "Typumwandlung": Konvertierung von "unsigned int" in größeren Typ "void *"
+C:\Users\Daniel\Desktop\Programmieren\Chip8\include\imgui-sfml\imgui-SFML.cpp(489,50): warning C4312:  "Typumwandlung": Konvertierung von "unsigned int" in größeren Typ "void *"
+C:\Users\Daniel\Desktop\Programmieren\Chip8\include\imgui-sfml\imgui-SFML.cpp(505,50): warning C4312:  "Typumwandlung": Konvertierung von "unsigned int" in größeren Typ "void *"
+  imgui.cpp
+  imgui_draw.cpp
+  imgui_widgets.cpp
+  main.cpp
+C:\Users\Daniel\Desktop\Programmieren\Chip8\include\imgui-sfml\imgui-SFML.cpp(697,63): warning C4312:  "Typumwandlung": Konvertierung von "unsigned int" in größeren Typ "void *"
+C:\Users\Daniel\Desktop\Programmieren\Chip8\Chip8.hpp(158,18): warning C4244:  "=": Konvertierung von "unsigned short" in "unsigned char", möglicher Datenverlust
+C:\Users\Daniel\Desktop\Programmieren\Chip8\Chip8.hpp(321,26): warning C4244:  "=": Konvertierung von "short" in "unsigned char", möglicher Datenverlust
+C:\Users\Daniel\Desktop\Programmieren\Chip8\main.cpp(39,90): warning C4244:  "Argument": Konvertierung von "T" in "T", möglicher Datenverlust
+C:\Users\Daniel\Desktop\Programmieren\Chip8\main.cpp(39,90): warning C4244:         with
+C:\Users\Daniel\Desktop\Programmieren\Chip8\main.cpp(39,90): warning C4244:         [
+C:\Users\Daniel\Desktop\Programmieren\Chip8\main.cpp(39,90): warning C4244:             T=unsigned int
+C:\Users\Daniel\Desktop\Programmieren\Chip8\main.cpp(39,90): warning C4244:         ]
+C:\Users\Daniel\Desktop\Programmieren\Chip8\main.cpp(39,90): warning C4244:         and
+C:\Users\Daniel\Desktop\Programmieren\Chip8\main.cpp(39,90): warning C4244:         [
+C:\Users\Daniel\Desktop\Programmieren\Chip8\main.cpp(39,90): warning C4244:             T=float
+C:\Users\Daniel\Desktop\Programmieren\Chip8\main.cpp(39,90): warning C4244:         ]
+C:\Users\Daniel\Desktop\Programmieren\Chip8\main.cpp(39,70): warning C4244:  "Argument": Konvertierung von "T" in "T", möglicher Datenverlust
+C:\Users\Daniel\Desktop\Programmieren\Chip8\main.cpp(39,70): warning C4244:         with
+C:\Users\Daniel\Desktop\Programmieren\Chip8\main.cpp(39,70): warning C4244:         [
+C:\Users\Daniel\Desktop\Programmieren\Chip8\main.cpp(39,70): warning C4244:             T=unsigned int
+C:\Users\Daniel\Desktop\Programmieren\Chip8\main.cpp(39,70): warning C4244:         ]
+C:\Users\Daniel\Desktop\Programmieren\Chip8\main.cpp(39,70): warning C4244:         and
+C:\Users\Daniel\Desktop\Programmieren\Chip8\main.cpp(39,70): warning C4244:         [
+C:\Users\Daniel\Desktop\Programmieren\Chip8\main.cpp(39,70): warning C4244:             T=float
+C:\Users\Daniel\Desktop\Programmieren\Chip8\main.cpp(39,70): warning C4244:         ]
+C:\Users\Daniel\Desktop\Programmieren\Chip8\main.cpp(57,51): warning C4244:  "=": Konvertierung von "float" in "int", möglicher Datenverlust
+C:\Users\Daniel\Desktop\Programmieren\Chip8\main.cpp(114,93): warning C4244:  "Argument": Konvertierung von "float" in "sf::Uint8", möglicher Datenverlust
+C:\Users\Daniel\Desktop\Programmieren\Chip8\main.cpp(114,75): warning C4244:  "Argument": Konvertierung von "float" in "sf::Uint8", möglicher Datenverlust
+C:\Users\Daniel\Desktop\Programmieren\Chip8\main.cpp(114,57): warning C4244:  "Argument": Konvertierung von "float" in "sf::Uint8", möglicher Datenverlust
+C:\Users\Daniel\Desktop\Programmieren\Chip8\main.cpp(114,39): warning C4244:  "Argument": Konvertierung von "float" in "sf::Uint8", möglicher Datenverlust
+C:\Users\Daniel\Desktop\Programmieren\Chip8\main.cpp(121,98): warning C4244:  "Argument": Konvertierung von "T" in "float", möglicher Datenverlust
+C:\Users\Daniel\Desktop\Programmieren\Chip8\main.cpp(121,98): warning C4244:         with
+C:\Users\Daniel\Desktop\Programmieren\Chip8\main.cpp(121,98): warning C4244:         [
+C:\Users\Daniel\Desktop\Programmieren\Chip8\main.cpp(121,98): warning C4244:             T=unsigned int
+C:\Users\Daniel\Desktop\Programmieren\Chip8\main.cpp(121,98): warning C4244:         ]
+C:\Users\Daniel\Desktop\Programmieren\Chip8\main.cpp(121,59): warning C4244:  "Argument": Konvertierung von "T" in "float", möglicher Datenverlust
+C:\Users\Daniel\Desktop\Programmieren\Chip8\main.cpp(121,59): warning C4244:         with
+C:\Users\Daniel\Desktop\Programmieren\Chip8\main.cpp(121,59): warning C4244:         [
+C:\Users\Daniel\Desktop\Programmieren\Chip8\main.cpp(121,59): warning C4244:             T=unsigned int
+C:\Users\Daniel\Desktop\Programmieren\Chip8\main.cpp(121,59): warning C4244:         ]
+C:\Users\Daniel\Desktop\Programmieren\Chip8\main.cpp(122,89): warning C4244:  "Argument": Konvertierung von "T" in "float", möglicher Datenverlust
+C:\Users\Daniel\Desktop\Programmieren\Chip8\main.cpp(122,89): warning C4244:         with
+C:\Users\Daniel\Desktop\Programmieren\Chip8\main.cpp(122,89): warning C4244:         [
+C:\Users\Daniel\Desktop\Programmieren\Chip8\main.cpp(122,89): warning C4244:             T=unsigned int
+C:\Users\Daniel\Desktop\Programmieren\Chip8\main.cpp(122,89): warning C4244:         ]
+C:\Users\Daniel\Desktop\Programmieren\Chip8\main.cpp(122,47): warning C4244:  "Argument": Konvertierung von "T" in "float", möglicher Datenverlust
+C:\Users\Daniel\Desktop\Programmieren\Chip8\main.cpp(122,47): warning C4244:         with
+C:\Users\Daniel\Desktop\Programmieren\Chip8\main.cpp(122,47): warning C4244:         [
+C:\Users\Daniel\Desktop\Programmieren\Chip8\main.cpp(122,47): warning C4244:             T=unsigned int
+C:\Users\Daniel\Desktop\Programmieren\Chip8\main.cpp(122,47): warning C4244:         ]
+C:\Users\Daniel\Desktop\Programmieren\Chip8\main.cpp(140,74): warning C4244:  "Argument": Konvertierung von "unsigned int" in "float", möglicher Datenverlust
+  Code wird generiert...
+C:\Users\Daniel\Desktop\Programmieren\Chip8\main.cpp(140,31): warning C4244:  "Argument": Konvertierung von "unsigned int" in "float", möglicher Datenverlust
+  Chip8.vcxproj -> C:\Users\Daniel\Desktop\Programmieren\Chip8\x64\Debug\Chip8.exe

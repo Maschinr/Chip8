@@ -1,4 +1,6 @@
-.vscode
+.vs
+
 *.exe
 *.o
 roms/*
+c8games/*
